@@ -5,7 +5,7 @@ from .models import Lottery, Prize, WinningTicket, ConsolationPrize, ContactNumb
 class LotteryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lottery
-        fields = ["lottery_name", "draw_number", "draw_date"]
+        fields = ["id","lottery_name", "draw_number", "draw_date"]
 
 
 class WinningTicketSerializer(serializers.ModelSerializer):

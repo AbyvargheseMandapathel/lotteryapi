@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-3f@j1^$y_=z1yq*f=e(s#sm=_1=rox=amp&)!qyx$khjezn+0#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["69.62.77.40"]
+ALLOWED_HOSTS = ["69.62.77.40","127.0.0.1"]
 
 
 
@@ -47,12 +47,14 @@ INSTALLED_APPS = [
     
     # Third-party
     'rest_framework',
+    'corsheaders',
 
     # Our app
     'lottery',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,3 +152,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+CORS_ALLOW_ALL_ORIGINS = True
