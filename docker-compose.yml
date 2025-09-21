@@ -10,4 +10,4 @@ services:
       - "8010:8010"
     env_file:
       - .env
-    restart: always        # ensures web container always restarts
+    restart: always        
