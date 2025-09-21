@@ -43,8 +43,9 @@ jobs:
           set -e
           cd ~/lotteryapi
           
-          echo ">>> Pulling latest code..."
-          git pull origin main
+          echo ">>> Force updating local main branch..."
+          git fetch origin main
+          git reset --hard origin/main
           
           echo ">>> Rebuilding containers..."
           docker compose down
