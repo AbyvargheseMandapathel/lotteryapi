@@ -29,16 +29,19 @@ jobs:
             ENDSSH
 
       # Step 3: Deploy Django app on VPS
+      # Step 3: Deploy to VPS
       - name: Deploy on VPS
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd ~/hirewave
-          git fetch --all
-          git reset --hard origin/production
-          docker compose down -v --remove-orphans
-          docker compose build --no-cache
-          docker compose up -d
+          set -e
+          cd ~/lotteryapi
+          
+          echo ">>> Pulling latest code..."
+          git pull origin main
+          
+          echo ">>> Rebuilding containers..."
+          docker-compose down
+          docker-compose up --build -d
+          
+          echo ">>> Deployment complete 🎉"
           EOF
-
-      - name: Deployment complete
-        run: echo "Deployment to VPS completed successfully!!"
