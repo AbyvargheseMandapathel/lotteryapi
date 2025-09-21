@@ -1,14 +1,6 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
   web:
     build: .
     command: gunicorn lotteryapi.wsgi:application --bind 0.0.0.0:8010
@@ -18,8 +10,4 @@ services:
       - "8010:8010"
     env_file:
       - .env
-    depends_on:
-      - db
-
-volumes:
-  postgres_data:
+    restart: always        # ensures web container always restarts
