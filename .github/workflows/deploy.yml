@@ -1,0 +1,44 @@
+name: Deploy LotteryAPI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Create .env file on VPS with DB credentials only
+      - name: Create .env on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'bash -s' <<'ENDSSH'
+          cd ~/lotteryapi || exit 1
+          cat > .env <<'EOF'
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            EOF
+            ENDSSH
+
+      # Step 3: Deploy Django app on VPS
+      - name: Deploy on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd ~/hirewave
+          git fetch --all
+          git reset --hard origin/production
+          docker compose down -v --remove-orphans
+          docker compose build --no-cache
+          docker compose up -d
+          EOF
+
+      - name: Deployment complete
+        run: echo "Deployment to VPS completed successfully!!"
